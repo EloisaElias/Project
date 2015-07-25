@@ -7,7 +7,7 @@ output: html_document
 
 
 
-```{r, echo=FALSE, message=FALSE, results='markup'}
+```{r, echo=TRUE, message=FALSE, results='markup'}
   x<-read.table("tidy.txt", header=TRUE)
 
   print("Column Names:", quote=FALSE)
