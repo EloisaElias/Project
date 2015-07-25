@@ -2,12 +2,14 @@
 title: "CodeBook"
 author: "Eric Hullander"
 date: "Friday, July 24, 2015"
-output: pdf_document
+output:
+  html_document:
+    keep_md: yes
 ---
 
 
 
-```{r, echo=FALSE, message=FALSE, results='markup'}
+```{r, echo=TRUE, message=FALSE, results='markup'}
   x<-read.table("tidy.txt", header=TRUE)
 
   print("Column Names:", quote=FALSE)
