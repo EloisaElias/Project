@@ -3,6 +3,7 @@ title: "CodeBook"
 author: "Eric Hullander"
 date: "Friday, July 24, 2015"
 output:
+  pdf_document: default
   html_document:
     keep_md: yes
 ---
