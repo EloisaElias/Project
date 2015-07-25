@@ -5,34 +5,26 @@ Friday, July 24, 2015
 
 
 
-```r
-  x<-read.table("tidy.txt", header=TRUE)
-
-  print("Column Names:", quote=FALSE)
-```
-
 ```
 ## [1] Column Names:
 ```
 
-```r
-  print(names(x),quote=FALSE)
 ```
-
-```
-## [1] subject     activity    variable    mean.value.
-```
-
-```r
-  print("subject: ", quote=FALSE)
+## $subject
+## [1] "integer"
+## 
+## $activity
+## [1] "factor"
+## 
+## $variable
+## [1] "factor"
+## 
+## $mean.value.
+## [1] "numeric"
 ```
 
 ```
 ## [1] subject:
-```
-
-```r
-  print(as.matrix(unique(x$subject)),quote=FALSE)
 ```
 
 ```
@@ -69,16 +61,8 @@ Friday, July 24, 2015
 ## [30,]   30
 ```
 
-```r
-  print("activity: ", quote=FALSE)
-```
-
 ```
 ## [1] activity:
-```
-
-```r
-  print(as.matrix(unique(x$activity)),quote=FALSE)
 ```
 
 ```
@@ -91,16 +75,8 @@ Friday, July 24, 2015
 ## [6,] WALKING_UPSTAIRS
 ```
 
-```r
-  print("variable: ", quote=FALSE)
-```
-
 ```
 ## [1] variable:
-```
-
-```r
-  print(as.matrix(unique(x$variable)),quote=FALSE)
 ```
 
 ```

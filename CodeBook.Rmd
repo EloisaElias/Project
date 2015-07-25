@@ -9,11 +9,11 @@ output:
 
 
 
-```{r, echo=TRUE, message=FALSE, results='markup'}
+```{r, echo=FALSE, message=FALSE, results='markup'}
   x<-read.table("tidy.txt", header=TRUE)
 
   print("Column Names:", quote=FALSE)
-  print(names(x),quote=FALSE)
+  print(lapply(x,class))
   print("subject: ", quote=FALSE)
   print(as.matrix(unique(x$subject)),quote=FALSE)
   print("activity: ", quote=FALSE)

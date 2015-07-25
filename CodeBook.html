@@ -67,15 +67,19 @@ img {
 </div>
 
 
-<pre class="r"><code>  x&lt;-read.table(&quot;tidy.txt&quot;, header=TRUE)
-
-  print(&quot;Column Names:&quot;, quote=FALSE)</code></pre>
 <pre><code>## [1] Column Names:</code></pre>
-<pre class="r"><code>  print(names(x),quote=FALSE)</code></pre>
-<pre><code>## [1] subject     activity    variable    mean.value.</code></pre>
-<pre class="r"><code>  print(&quot;subject: &quot;, quote=FALSE)</code></pre>
+<pre><code>## $subject
+## [1] &quot;integer&quot;
+## 
+## $activity
+## [1] &quot;factor&quot;
+## 
+## $variable
+## [1] &quot;factor&quot;
+## 
+## $mean.value.
+## [1] &quot;numeric&quot;</code></pre>
 <pre><code>## [1] subject:</code></pre>
-<pre class="r"><code>  print(as.matrix(unique(x$subject)),quote=FALSE)</code></pre>
 <pre><code>##       [,1]
 ##  [1,]    1
 ##  [2,]    2
@@ -107,9 +111,7 @@ img {
 ## [28,]   28
 ## [29,]   29
 ## [30,]   30</code></pre>
-<pre class="r"><code>  print(&quot;activity: &quot;, quote=FALSE)</code></pre>
 <pre><code>## [1] activity:</code></pre>
-<pre class="r"><code>  print(as.matrix(unique(x$activity)),quote=FALSE)</code></pre>
 <pre><code>##      [,1]              
 ## [1,] LAYING            
 ## [2,] SITTING           
@@ -117,9 +119,7 @@ img {
 ## [4,] WALKING           
 ## [5,] WALKING_DOWNSTAIRS
 ## [6,] WALKING_UPSTAIRS</code></pre>
-<pre class="r"><code>  print(&quot;variable: &quot;, quote=FALSE)</code></pre>
 <pre><code>## [1] variable:</code></pre>
-<pre class="r"><code>  print(as.matrix(unique(x$variable)),quote=FALSE)</code></pre>
 <pre><code>##       [,1]                           
 ##  [1,] tBodyAcc-mean()-X              
 ##  [2,] tBodyAcc-mean()-Y              
