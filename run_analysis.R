@@ -1,6 +1,6 @@
 library(dplyr)
 library(reshape)
-path="C:/Users/Eric/Desktop/Learning/R/Getting and Cleaning Data/UCI HAR Dataset/"
+path="getwd()"
 
 #Create dataframe with subject and activity factors
 #activity<-read.table("activity_labels.txt")

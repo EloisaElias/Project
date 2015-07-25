@@ -9,19 +9,13 @@ Via Opera Pia 11A, I-16145, Genoa, Italy.
 activityrecognition@smartlab.ws
 www.smartlab.ws
 ==================================================================
+The dataset was obtained from here:
 
-The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist. Using its embedded accelerometer and gyroscope, we captured 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz. The experiments have been video-recorded to label the data manually. The obtained dataset has been randomly partitioned into two sets, where 70% of the volunteers was selected for generating the training data and 30% the test data. 
+http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones</a 
 
-The sensor signals (accelerometer and gyroscope) were pre-processed by applying noise filters and then sampled in fixed-width sliding windows of 2.56 sec and 50% overlap (128 readings/window). The sensor acceleration signal, which has gravitational and body motion components, was separated using a Butterworth low-pass filter into body acceleration and gravity. The gravitational force is assumed to have only low frequency components, therefore a filter with 0.3 Hz cutoff frequency was used. From each window, a vector of features was obtained by calculating variables from the time and frequency domain. See 'features_info.txt' for more details. 
+Here are the data for the project: 
 
-For each record it is provided:
-======================================
-
-- Triaxial acceleration from the accelerometer (total acceleration) and the estimated body acceleration.
-- Triaxial Angular velocity from the gyroscope. 
-- A 561-feature vector with time and frequency domain variables. 
-- Its activity label. 
-- An identifier of the subject who carried out the experiment.
+https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip 
 
 The dataset includes the following files:
 =========================================
@@ -42,29 +36,70 @@ The dataset includes the following files:
 
 - 'test/y_test.txt': Test labels.
 
-The following files are available for the train and test data. Their descriptions are equivalent. 
+Additional information was provided in "inertial folders", but this data was excluded from the analysis, as only data regarding mean and std were required.
 
-- 'train/subject_train.txt': Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30. 
+Method
+================================================================
+###This first process is repeated on both the 'train' and 'test' datasets.  
+1.  These libraries are required
 
-- 'train/Inertial Signals/total_acc_x_train.txt': The acceleration signal from the smartphone accelerometer X axis in standard gravity units 'g'. Every row shows a 128 element vector. The same description applies for the 'total_acc_x_train.txt' and 'total_acc_z_train.txt' files for the Y and Z axis. 
+```r
+library(dplyr)
+library(reshape)
+path="getwd()"
+```
+2.  Create dataframe with subject factors
 
-- 'train/Inertial Signals/body_acc_x_train.txt': The body acceleration signal obtained by subtracting the gravity from the total acceleration. 
+```r
+Xtest<-read.table("test/X_test.txt",header=TRUE)
+```
+3. get columns with mean and std
 
-- 'train/Inertial Signals/body_gyro_x_train.txt': The angular velocity vector measured by the gyroscope for each window sample. The units are radians/second. 
+```r
+colnames(Xtest)[]<-as.character(read.table("features.txt")[,2])
+Xtest<-Xtest[,c(grep("mean",names(Xtest)),grep("std",names(Xtest)))]
+```
+4. combine activities with subject
 
-Notes: 
-======
-- Features are normalized and bounded within [-1,1].
-- Each feature vector is a row on the text file.
+```r
+Xtest<-cbind(read.table("test/subject_test.txt",header=TRUE),read.table("test/y_test.txt",header=TRUE),Xtest)
+```
+5. match activity labels with activity numbers, rename columns
 
-For more information about this dataset contact: activityrecognition@smartlab.ws
+```r
+Xtest<-inner_join(read.table("activity_labels.txt"),Xtest,by=c("V1"="X5"))
+Xtest<-select(Xtest,-V1)
+names(Xtest)[1]<-"activity"
+names(Xtest)[2]<-"subject"
+Xtest$subject<-as.factor(Xtest$subject)
+```
+6.  Convert to "long data"
 
-License:
-========
-Use of this dataset in publications must be acknowledged by referencing the following publication [1] 
+```r
+xmelt<-melt(Xtest)
+```
+7.  Perform aggregrate functions to calculate mean per subject-activity
 
-[1] Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. Human Activity Recognition on Smartphones using a Multiclass Hardware-Friendly Support Vector Machine. International Workshop of Ambient Assisted Living (IWAAL 2012). Vitoria-Gasteiz, Spain. Dec 2012
+```r
+xgroup<-group_by(xmelt,subject,activity,variable)
+outputtest<-data.frame(summarize(xgroup,mean(value)))
+```
+8.  Repeat above proccess for "train" data
+9.  Bind results of train data and test data into one data frame
 
-This dataset is distributed AS-IS and no responsibility implied or explicit can be addressed to the authors or their institutions for its use or misuse. Any commercial use is prohibited.
+```r
+output<-rbind(outputtrain,outputtest)
+```
+10.  Optionally can be cast back into wide data, sorted, and arranged
 
-Jorge L. Reyes-Ortiz, Alessandro Ghio, Luca Oneto, Davide Anguita. November 2012.
+```r
+output$subject<-as.numeric(output$subject)
+longoutput<-arrange(output,subject)
+wideoutput<-cast(output,subject+activity~variable)
+```
+11.  Create output file (long data)
+
+```r
+write.table(longoutput,"tidy.txt",row.names=FALSE)
+```
+
