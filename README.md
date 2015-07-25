@@ -41,30 +41,30 @@ Additional information was provided in "inertial folders", but this data was exc
 Method
 ================================================================
 ###This first process is repeated on both the 'train' and 'test' datasets.  
-1.  These libraries are required
+.  These libraries are required
 
 ```r
 library(dplyr)
 library(reshape)
 path="getwd()"
 ```
-2.  Create dataframe with subject factors
+.  Create dataframe with subject factors
 
 ```r
 Xtest<-read.table("test/X_test.txt",header=TRUE)
 ```
-3. get columns with mean and std
+. get columns with mean and std
 
 ```r
 colnames(Xtest)[]<-as.character(read.table("features.txt")[,2])
 Xtest<-Xtest[,c(grep("mean",names(Xtest)),grep("std",names(Xtest)))]
 ```
-4. combine activities with subject
+. combine activities with subject
 
 ```r
 Xtest<-cbind(read.table("test/subject_test.txt",header=TRUE),read.table("test/y_test.txt",header=TRUE),Xtest)
 ```
-5. match activity labels with activity numbers, rename columns
+. match activity labels with activity numbers, rename columns
 
 ```r
 Xtest<-inner_join(read.table("activity_labels.txt"),Xtest,by=c("V1"="X5"))
@@ -73,31 +73,31 @@ names(Xtest)[1]<-"activity"
 names(Xtest)[2]<-"subject"
 Xtest$subject<-as.factor(Xtest$subject)
 ```
-6.  Convert to "long data"
+.  Convert to "long data"
 
 ```r
 xmelt<-melt(Xtest)
 ```
-7.  Perform aggregrate functions to calculate mean per subject-activity
+.  Perform aggregrate functions to calculate mean per subject-activity
 
 ```r
 xgroup<-group_by(xmelt,subject,activity,variable)
 outputtest<-data.frame(summarize(xgroup,mean(value)))
 ```
-8.  Repeat above proccess for "train" data
-9.  Bind results of train data and test data into one data frame
+.  Repeat above proccess for "train" data
+.  Bind results of train data and test data into one data frame
 
 ```r
 output<-rbind(outputtrain,outputtest)
 ```
-10.  Optionally can be cast back into wide data, sorted, and arranged
+.  Optionally can be cast back into wide data, sorted, and arranged
 
 ```r
 output$subject<-as.numeric(output$subject)
 longoutput<-arrange(output,subject)
 wideoutput<-cast(output,subject+activity~variable)
 ```
-11.  Create output file (long data)
+.  Create output file (long data)
 
 ```r
 write.table(longoutput,"tidy.txt",row.names=FALSE)
